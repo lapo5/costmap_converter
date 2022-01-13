@@ -75,9 +75,24 @@ install(TARGETS costmap_converter
 install(TARGETS standalone_converter
    DESTINATION bin
 )
+install(TARGETS standalone_converter
+  EXPORT export_${PROJECT_NAME}
+  DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY include/
    DESTINATION include/
+)
+
+# Install launch files.
+install(
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}/
+)
+
+# Install params files.
+install(
+  DIRECTORY params
+  DESTINATION share/${PROJECT_NAME}/
 )
 
 ament_export_include_directories(include)
@@ -85,13 +100,5 @@ ament_export_libraries(costmap_converter)
 ament_export_dependencies(${dependencies})
 pluginlib_export_plugin_description_file(costmap_converter costmap_converter_plugins.xml)
 
-if(BUILD_TESTING)
-  find_package(ament_cmake_gtest REQUIRED)
-  ament_add_gtest(test_costmap_polygons test/costmap_polygons.cpp)
-  if(TARGET test_costmap_polygons)
-    target_link_libraries(test_costmap_polygons costmap_converter)  
-  endif()
-  ament_target_dependencies(test_costmap_polygons ${dependencies})
-endif()
 
 ament_package()

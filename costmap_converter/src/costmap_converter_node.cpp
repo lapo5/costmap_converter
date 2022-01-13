@@ -54,7 +54,7 @@ class CostmapStandaloneConversion : public rclcpp::Node {
         converter_loader_("costmap_converter",
                           "costmap_converter::BaseCostmapToPolygons") {
     costmap_ros_ =
-        std::make_shared<nav2_costmap_2d::Costmap2DROS>("converter_costmap");
+        std::make_shared<nav2_costmap_2d::Costmap2DROS>("costmap_2d", "/sim", "costmap_2d");
     costmap_thread_ = std::make_unique<std::thread>(
         [](rclcpp_lifecycle::LifecycleNode::SharedPtr node) {
           rclcpp::spin(node->get_node_base_interface());
@@ -71,10 +71,10 @@ class CostmapStandaloneConversion : public rclcpp::Node {
         "costmap_converter::CostmapToPolygonsDBSMCCH";
 
     declare_parameter("converter_plugin",
-                      rclcpp::ParameterValue(converter_plugin));
+            rclcpp::ParameterValue(converter_plugin));
 
     get_parameter_or<std::string>("converter_plugin", converter_plugin,
-                                  converter_plugin);
+            converter_plugin);
 
     try {
       converter_ = converter_loader_.createSharedInstance(converter_plugin);
@@ -113,7 +113,7 @@ class CostmapStandaloneConversion : public rclcpp::Node {
     get_parameter_or<int>("occupied_min_value", occupied_min_value_,
                           occupied_min_value_);
 
-    std::string odom_topic = "/odom";
+    std::string odom_topic = "/sim/odom";
     declare_parameter("odom_topic", rclcpp::ParameterValue(odom_topic));
     get_parameter_or<std::string>("odom_topic", odom_topic, odom_topic);
 
